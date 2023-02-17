@@ -4,6 +4,6 @@ import { App } from './App';
 
 test('renders logo', () => {
   const { getByText } = render(<App />);
-  const linkElement = getByText(/concept/i);
+  const linkElement = getByText(/Placeholder/i);
   expect(linkElement).toBeInTheDocument();
 });

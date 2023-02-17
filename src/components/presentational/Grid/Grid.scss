@@ -1,0 +1,9 @@
+@import 'scss/main.scss';
+
+.CellContainer {
+  border: 1px solid $gainsboro;
+
+  &.isSelectable {
+    border: 1px solid $on-selectable;
+  }
+}
