@@ -1,0 +1,27 @@
+@import 'scss/main.scss';
+
+.Tile {
+  $tile-diameter: 45px;
+  $tile-border: 2px;
+
+  height: $tile-diameter;
+  width: $tile-diameter;
+  font-size: $md-font-size;
+  line-height: $tile-diameter;
+  position: relative;
+  text-align: center;
+  text-transform: capitalize;
+  background-color: $tile-tan;
+  border-radius: 10%;
+  border-left: $tile-border solid $tile-shade;
+  border-bottom: $tile-border solid $tile-shade;
+  border-top: $tile-border solid $tile-lit;
+  border-right: $tile-border solid $tile-lit;
+  color: white;
+
+  .TileValue {
+    font-size: $xs-font-size;
+    position: relative;
+    top: 3px;
+  }
+}

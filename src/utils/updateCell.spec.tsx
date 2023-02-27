@@ -4,7 +4,7 @@ import { generateGrid } from './generateGrid';
 describe('updateCell()', () => {
   it('should update the expected cell', () => {
     const testValue = 1;
-    const grid = generateGrid(2,2, () => testValue);
+    let grid = generateGrid(2,2, () => testValue);
     const newValue = 100;
     const updateFunc = () => newValue;
     const cellToUpdate = {
@@ -16,7 +16,7 @@ describe('updateCell()', () => {
     expect(grid[cellToUpdate.y][cellToUpdate.x]).toEqual(testValue);
 
     // update
-    updateCell(grid, cellToUpdate, updateFunc);
+    grid = updateCell(grid, cellToUpdate, updateFunc);
 
     // check final state
     expect(grid[cellToUpdate.y][cellToUpdate.x]).toEqual(newValue);
@@ -25,7 +25,7 @@ describe('updateCell()', () => {
 
   it('should be able to update the cell based on the cell\'s initial value', () => {
     const testValue = 1;
-    const grid = generateGrid(2,2, () => testValue);
+    let grid = generateGrid(2,2, () => testValue);
     const updateFunc = (initial: any) => initial + 1;
     const cellToUpdate = {
       x: 1,
@@ -36,7 +36,7 @@ describe('updateCell()', () => {
     expect(grid[cellToUpdate.y][cellToUpdate.x]).toEqual(testValue);
 
     // update
-    updateCell(grid, cellToUpdate, updateFunc);
+    grid = updateCell(grid, cellToUpdate, updateFunc);
 
     // check final state
     expect(grid[cellToUpdate.y][cellToUpdate.x]).toEqual(updateFunc(testValue));
@@ -45,7 +45,7 @@ describe('updateCell()', () => {
 
   it('should throw an error if the coordinates are out of bounds', () => {
     const testValue = 1;
-    const grid = generateGrid(2,2, () => testValue);
+    let grid = generateGrid(2,2, () => testValue);
     const updateFunc = (initial: any) => initial + 1;
     const cellToUpdate = {
       x: 2,

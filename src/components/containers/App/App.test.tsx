@@ -4,6 +4,6 @@ import { App } from './App';
 
 test('renders logo', () => {
   const { getByText } = render(<App />);
-  const linkElement = getByText(/Placeholder/i);
+  const linkElement = getByText(/create a crossword/i);
   expect(linkElement).toBeInTheDocument();
 });

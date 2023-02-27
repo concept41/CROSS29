@@ -1,19 +1,23 @@
+import { deepCloneGrid } from "./deepCloneGrid";
+
 // given a grid, update a cell
 export const updateCell = (
   grid: any[][],
-  cellCoordinates: Coordinates,
+  cellCoordinates: GridCoordinates,
   updateFunc: (initialValue: any) => any,
 ) => {
+  // create copy of grid to return
+  const gridCopy = deepCloneGrid(grid);
   // handling coordinates out of bounds 
-  const gridHasCellAtCoordinates = grid.length > cellCoordinates.y && grid[cellCoordinates.y].length > cellCoordinates.x;
+  const gridHasCellAtCoordinates = gridCopy.length > cellCoordinates.y && gridCopy[cellCoordinates.y].length > cellCoordinates.x;
 
   if (!gridHasCellAtCoordinates) {
     throw new Error(`Error in updateCell: grid does not have a cell at (${cellCoordinates.x},${cellCoordinates.y})`);
   }
 
   // update value
-  const initialValue = grid[cellCoordinates.y][cellCoordinates.x];
-  grid[cellCoordinates.y][cellCoordinates.x] = updateFunc(initialValue);
+  const initialValue = gridCopy[cellCoordinates.y][cellCoordinates.x];
+  gridCopy[cellCoordinates.y][cellCoordinates.x] = updateFunc(initialValue);
 
-  return grid;
+  return gridCopy;
 }

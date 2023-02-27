@@ -1,0 +1,17 @@
+@import 'scss/main.scss';
+
+.CellContainer {
+  border: 1px solid $gainsboro;
+
+  &.selected {
+    border: 1px solid $on-selected;
+  }
+
+  &.selectable {
+    border: 1px solid $on-selectable;
+  }
+
+  &.disabled {
+    border: 1px solid $on-disabled;
+  }
+}

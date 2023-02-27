@@ -2,6 +2,13 @@
 $base-black: black;
 $base-white: white;
 $gainsboro: #DBDFE2;
+$text-message-blue: #0291ff;
+$tile-tan: #1e1e1e;
+$tile-shade: $base-black;
+$tile-lit: #333333;
+// $tile-tan: #ffc82f;
+// $tile-shade: #e3ab13;
+// $tile-lit: #fbdc85;
 $transparent: rgba(0,0,0,0);
 /*-- Typeography --*/
     /*-- Fonts --*/
@@ -9,13 +16,15 @@ $transparent: rgba(0,0,0,0);
     /*-- Sizing --*/
     $xs-font-size: 14px;
     $sm-font-size: 20px;
+    $md-font-size: 30px;
     $lg-font-size: 40px;
     /*-- Alternate Colors --*/
     $disabled-base-black: $gainsboro;
 /*-- Borders --*/
     /*-- Color --*/
-    $on-read-only: $gainsboro;
+    $on-disabled: $gainsboro;
     $on-selectable: $base-black;
+    $on-selected: $text-message-blue;
     /*-- Radius --*/
 /*-- Spacing --*/
     /*-- Padding --*/

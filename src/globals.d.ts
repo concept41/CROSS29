@@ -2,7 +2,7 @@ interface ObjectOf<T, K> {
     [key: T]: K
 }
 
-interface Coordinates {
+interface GridCoordinates {
     x: number,
     y: number,
 }
