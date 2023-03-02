@@ -11,20 +11,25 @@ interface IUpdateCrosswordGridCellState {
   contents?: ReactNode;
 }
 
+type emptyCellContentsReturnType = (cellLength: number, defaultCellState: CROSSWORD_CELL_STATE) => () => CellState;
+
+export const emptyCellContents: emptyCellContentsReturnType = (cellLength: number, defaultCellState: CROSSWORD_CELL_STATE) => {
+  return () => ({
+    length: cellLength,
+    state: defaultCellState,
+    contents: null,
+  });
+};
+
 export const useCrosswordGridState = (
   gridHeight: number,
   gridWidth: number,
   cellLength: number,
   defaultCellState: CROSSWORD_CELL_STATE = CROSSWORD_CELL_STATE.DISABLED,
 ) => {
-  const emptyCellContents: () => CellState = () => ({
-    length: cellLength,
-    state: defaultCellState,
-    contents: null,
-  });
-
+  
   // construction of letters on a grid
-  const [gridContentsState, setGridContentsState] = useState(generateGrid(gridHeight, gridWidth, emptyCellContents));
+  const [gridContentsState, setGridContentsState] = useState(generateGrid(gridHeight, gridWidth, emptyCellContents(cellLength, defaultCellState)));
 
   // update contents of a given cell
   const updateCrosswordGridCellState = useCallback(({
@@ -33,7 +38,6 @@ export const useCrosswordGridState = (
     contents,
   }: IUpdateCrosswordGridCellState) => {
     setGridContentsState((initialState) => {
-      console.log(initialState[0][0]);
       const newGridContentsState = updateCell(initialState, coordinates, (initialCellState) => {        
         return alterPropertyIfNotUndefined(initialCellState, {
           length: initialCellState.length,
@@ -42,7 +46,6 @@ export const useCrosswordGridState = (
         })
       });
 
-      console.log(newGridContentsState[0][0]);
       return newGridContentsState;
     });
   }, [setGridContentsState])
