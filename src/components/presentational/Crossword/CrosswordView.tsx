@@ -11,7 +11,7 @@ export const CrosswordView = () => {
   const gridWidth = 5;
   const cellLength = 47;
   // construction of letters on a grid
-  const {gridContentsState, setGridContentsState, updateCrosswordGridCellState} = useCrosswordGridState(gridHeight, gridWidth, cellLength);
+  const {gridContentsState, setGridContentsState, updateCrosswordGridCell: updateCrosswordGridCellState} = useCrosswordGridState(gridHeight, gridWidth, cellLength);
   // typing and direction is separate from crossword grid
   const clickHandler = useCallback((coordinates) => {
     updateCrosswordGridCellState({

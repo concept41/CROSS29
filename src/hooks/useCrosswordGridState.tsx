@@ -5,7 +5,7 @@ import { alterPropertyIfNotUndefined } from 'utils/alterPropertyIfNotUndefined';
 import { CROSSWORD_CELL_STATE, CellState } from 'types/crossword.types';
 
 
-interface IUpdateCrosswordGridCellState {
+interface IUpdateCrosswordGridCellArgs {
   coordinates: GridCoordinates;
   state?: CROSSWORD_CELL_STATE;
   contents?: ReactNode;
@@ -31,12 +31,12 @@ export const useCrosswordGridState = (
   // construction of letters on a grid
   const [gridContentsState, setGridContentsState] = useState(generateGrid(gridHeight, gridWidth, emptyCellContents(cellLength, defaultCellState)));
 
-  // update contents of a given cell
-  const updateCrosswordGridCellState = useCallback(({
+  // update properties of a given cell
+  const updateCrosswordGridCell = useCallback(({
     coordinates,
     state,
     contents,
-  }: IUpdateCrosswordGridCellState) => {
+  }: IUpdateCrosswordGridCellArgs) => {
     setGridContentsState((initialState) => {
       const newGridContentsState = updateCell(initialState, coordinates, (initialCellState) => {        
         return alterPropertyIfNotUndefined(initialCellState, {
@@ -48,12 +48,20 @@ export const useCrosswordGridState = (
 
       return newGridContentsState;
     });
-  }, [setGridContentsState])
+  }, [setGridContentsState]);
+
+  // updates all cells
+  const updateCrosswordGridCells = useCallback(() => {
+    setGridContentsState((initialState) => {
+      // update state of all cells
+    });
+  }, [setGridContentsState]);
 
 
   return {
     gridContentsState,
     setGridContentsState,
-    updateCrosswordGridCellState,
+    updateCrosswordGridCell,
+    updateCrosswordGridCells
   };
 }

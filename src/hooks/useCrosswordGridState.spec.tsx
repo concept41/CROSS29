@@ -34,7 +34,7 @@ describe('useCrosswordGridState()', () => {
         contents: result.current.gridContentsState[1][1].contents,
       }
       act(() => {
-        result.current.updateCrosswordGridCellState(expectedState);
+        result.current.updateCrosswordGridCell(expectedState);
       });
 
       // test
@@ -58,7 +58,7 @@ describe('useCrosswordGridState()', () => {
         contents: <div>hello</div>,
       }
       act(() => {
-        result.current.updateCrosswordGridCellState(expectedState);
+        result.current.updateCrosswordGridCell(expectedState);
       });
 
       // test
