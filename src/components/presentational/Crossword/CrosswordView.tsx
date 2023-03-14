@@ -1,7 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, KeyboardEvent } from 'react';
 import { GridView } from "components/presentational/GridView/GridView";
 import { FlexBox } from "components/presentational/FlexBox/FlexBox";
-import { CROSSWORD_CELL_STATE } from 'types/crossword.types';
 import { useCrosswordGridState } from 'hooks/useCrosswordGridState';
 
 
@@ -11,15 +10,20 @@ export const CrosswordView = () => {
   const gridWidth = 5;
   const cellLength = 47;
   // construction of letters on a grid
-  const {gridContentsState, setGridContentsState, updateCrosswordGridCell: updateCrosswordGridCellState} = useCrosswordGridState(gridHeight, gridWidth, cellLength);
-  // typing and direction is separate from crossword grid
-  const clickHandler = useCallback((coordinates) => {
-    updateCrosswordGridCellState({
-      coordinates,
-      state: CROSSWORD_CELL_STATE.SELECTED,
-    });
-  }, [updateCrosswordGridCellState]);
-  // letters on tiles
+  const {
+    gridContentsState,
+    setGridContentsState,
+    updateCrosswordGridCell,
+    updateCrosswordGridCells,
+    getSelectedCoordinates,
+    setSelected,
+    setTile,
+  } = useCrosswordGridState(gridHeight, gridWidth, cellLength);
+  // listen for key presses
+  const downHandler = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
+    setTile(event.key);
+  }, [setTile]);
+
   // side view of clues
 
   return (
@@ -27,7 +31,8 @@ export const CrosswordView = () => {
       <FlexBox className='CrosswordContainer'>
         <GridView
           gridContents={gridContentsState}
-          clickHandler={clickHandler}/>
+          clickHandler={setSelected}
+          keyDownHandler={downHandler}/>
       </FlexBox>
     </>
   )

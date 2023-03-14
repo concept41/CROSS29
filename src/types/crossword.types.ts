@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 
 export enum CROSSWORD_DIRECTION {
   ACROSS = 'across',
@@ -20,7 +19,16 @@ export enum CROSSWORD_CELL_STATE {
 export interface CellState {
   length: number,
   state: CROSSWORD_CELL_STATE,
-  contents?: ReactNode,
+  contents: CellContents<unknown> | null,
+}
+
+export enum CELL_CONTENT_TYPE {
+  TILE = 'tile',
+}
+
+export interface CellContents<T> {
+  contentType: CELL_CONTENT_TYPE,
+  contentProps: T,
 }
 
 export interface ICellProps extends CellState {

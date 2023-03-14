@@ -1,22 +1,24 @@
-import React, { useCallback } from 'react';
+import React, { KeyboardEventHandler, useCallback } from 'react';
 import { FlexBox } from "components/presentational/FlexBox/FlexBox";
-import { CROSSWORD_CELL_STATE, ICellProps, CellState } from 'types/crossword.types';
+import { CROSSWORD_CELL_STATE, ICellProps, CellState, CELL_CONTENT_TYPE, CellContents } from 'types/crossword.types';
 import cx from 'classnames';
 
 import './Grid.scss';
+import { ITileProps, Tile } from '../Tile/Tile';
 
 
 interface IGridProperties {
   gridContents: CellState[][],
   clickHandler: (coordinates: GridCoordinates) => void,
+  keyDownHandler: KeyboardEventHandler<HTMLDivElement>,
 }
 
 export const GridView = ({
   gridContents,
   clickHandler,
+  keyDownHandler,
 }: IGridProperties) => {
   const renderGrid = useCallback(() => {
-    console.log('renderGrid is currently not running when the individual cells are updated');
     return gridContents.map((row, y) => {
       return (
         <FlexBox key={y}>
@@ -33,21 +35,32 @@ export const GridView = ({
   }, [gridContents, clickHandler]);
 
   return (
-    <>
+    <div className='GridViewContainer' onKeyDown={keyDownHandler} tabIndex={0}>
       <FlexBox className='GridContainer' direction='column'>
         { renderGrid() }
       </FlexBox>
-    </>
+    </div>
   )
 }
 
+export const buildCellContents = (cellContents: CellContents<unknown> | null) => {
+  if(!cellContents) {
+    return null;
+  }
+
+  switch(cellContents.contentType) {
+    case CELL_CONTENT_TYPE.TILE:
+      const props = cellContents.contentProps as ITileProps;
+      return <Tile {...props}/>;
+  }
+}
 
 
 export const Cell = ({
   length,
   coordinates,
   state = CROSSWORD_CELL_STATE.DISABLED,
-  contents,
+  contents = null,
   clickHandler,
 }: ICellProps) => {
   return (
@@ -60,7 +73,7 @@ export const Cell = ({
         width: `${length}px`,
       }}
       onClick={() => clickHandler(coordinates)}>
-      <FlexBox>{contents}</FlexBox>
+      <FlexBox>{buildCellContents(contents)}</FlexBox>
     </div>
   )
 }
