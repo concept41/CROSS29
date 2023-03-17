@@ -1,4 +1,4 @@
-import React, { useCallback, KeyboardEvent } from 'react';
+import React, { useCallback, KeyboardEvent, useState } from 'react';
 import { GridView } from "components/presentational/GridView/GridView";
 import { FlexBox } from "components/presentational/FlexBox/FlexBox";
 import { useCrosswordGridState } from 'hooks/useCrosswordGridState';
@@ -6,8 +6,8 @@ import { useCrosswordGridState } from 'hooks/useCrosswordGridState';
 
 export const CrosswordView = () => {
   // constants
-  const gridHeight = 5;
-  const gridWidth = 5;
+  const initialGridHeight = 5;
+  const initialGridWidth = 5;
   const cellLength = 47;
   // construction of letters on a grid
   const {
@@ -18,17 +18,24 @@ export const CrosswordView = () => {
     getSelectedCoordinates,
     setSelected,
     setTile,
-  } = useCrosswordGridState(gridHeight, gridWidth, cellLength);
+    addRow,
+    addColumn,
+  } = useCrosswordGridState(initialGridHeight, initialGridWidth, cellLength);
   // listen for key presses
   const downHandler = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-    setTile(event.key);
+    if (event.key.match(/^[a-z]$/i)) {
+      setTile(event.key);
+    }
   }, [setTile]);
-
   // side view of clues
 
   return (
     <>
-      <FlexBox className='CrosswordContainer'>
+      <FlexBox className='CrosswordContainer' direction='column'>
+        <div>
+          <button onClick={addRow}>Add Row</button>
+          <button onClick={addColumn}>Add Column</button>
+        </div>
         <GridView
           gridContents={gridContentsState}
           clickHandler={setSelected}
@@ -38,25 +45,29 @@ export const CrosswordView = () => {
   )
 }
 
+// interface IInputProps {
+//   type?: string;
+//   value: any;
+//   label?: string;
+//   handleChange: (event: any) => void;
+//   disableKeydown?: boolean;
+// }
 
-// Currently Unused
-interface ICellLabelProps {
-  cellLength: number,
-  numericLabel?: number,
-}
-
-const CellLabel = ({
-  cellLength,
-  numericLabel,
-}: ICellLabelProps) => {
-  return (
-    <div
-      className={'CellLabelContainer'}
-      style={{
-        height: `${cellLength}px`,
-        width: `${cellLength}px`,
-      }}>
-      <span>{numericLabel}</span>
-    </div>
-  );
-}
+// export const Input = ({
+//   type,
+//   value,
+//   label,
+//   handleChange,
+//   disableKeydown = false,
+// }: IInputProps) => {
+//   return (
+//     <div className="InputContainer">
+//       <label>{label}</label>
+//       <input
+//         type={type}
+//         value={value}
+//         onChange={handleChange}
+//         onkeydown={() => disableKeydown ? false : }/>
+//     </div>
+//   )
+// }

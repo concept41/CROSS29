@@ -1,10 +1,11 @@
-import React, { ReactNode, useState, useCallback } from 'react';
+import React, { ReactNode, useState, useCallback, useEffect } from 'react';
 import { generateGrid } from 'utils/generateGrid';
 import { updateCell } from 'utils/updateCell';
 import { alterPropertyIfNotUndefined } from 'utils/alterPropertyIfNotUndefined';
 import { CROSSWORD_CELL_STATE, CellState, CELL_CONTENT_TYPE } from 'types/crossword.types';
 import { updateAllCells } from 'utils/updateAllCells';
 import { Tile } from 'components/presentational/Tile/Tile';
+import { deepCloneGrid } from 'utils/deepCloneGrid';
 
 
 interface IUpdateCrosswordGridCellArgs {
@@ -28,14 +29,14 @@ export const emptyCellContents: emptyCellContentsReturnType = (cellLength: numbe
 };
 
 export const useCrosswordGridState = (
-  gridHeight: number,
-  gridWidth: number,
+  initialGridHeight: number,
+  initialGridWidth: number,
   cellLength: number,
   defaultCellState: CROSSWORD_CELL_STATE = CROSSWORD_CELL_STATE.DISABLED,
 ) => {
   
   // construction of letters on a grid
-  const [gridContentsState, setGridContentsState] = useState(generateGrid(gridHeight, gridWidth, emptyCellContents(cellLength, defaultCellState)));
+  const [gridContentsState, setGridContentsState] = useState(generateGrid(initialGridHeight, initialGridWidth, emptyCellContents(cellLength, defaultCellState)));
 
   // update properties of a given cell
   const updateCrosswordGridCell = useCallback(({
@@ -43,7 +44,6 @@ export const useCrosswordGridState = (
     state,
     contents,
   }: IUpdateCrosswordGridCellArgs) => {
-    console.log(`updateCrosswordGridCell: ${JSON.stringify(coordinates)}, ${state}`);
     setGridContentsState((initialState) => {
       const newGridContentsState = updateCell(initialState, coordinates, (initialCellState) => {   
         const newState = alterPropertyIfNotUndefined(initialCellState, {
@@ -51,7 +51,6 @@ export const useCrosswordGridState = (
           state,
           contents,
         });
-        console.log(initialCellState, newState);
         return newState
       });
 
@@ -63,14 +62,12 @@ export const useCrosswordGridState = (
   const updateCrosswordGridCells = useCallback(({
     state,
   }: IUpdateCrosswordGridCellsArgs) => {
-    console.log(`updateCrosswordGridCells: ${state}`);
     setGridContentsState((initialState) => {
       return updateAllCells(initialState, (initialCellState) => {
         const newState = alterPropertyIfNotUndefined(initialCellState, {
           length: initialCellState.length,
           state,
         });
-        console.log(initialCellState, newState);
 
         return newState;
       });
@@ -93,7 +90,6 @@ export const useCrosswordGridState = (
 
   // select a Cell
   const setSelected = useCallback((coordinates) => {
-    console.log(`setSelected: ${JSON.stringify(coordinates)}`);
     // clear existing state
     updateCrosswordGridCells({
       state: CROSSWORD_CELL_STATE.DISABLED,
@@ -108,7 +104,6 @@ export const useCrosswordGridState = (
   // set tile on selected cell
   const setTile = useCallback((letter: string) => {
     const coordinates = getSelectedCoordinates();
-    console.log(coordinates);
 
     if (!coordinates) {
       throw new Error('Error in useCrosswordGridState.setTile: no selected coordinates');
@@ -126,6 +121,41 @@ export const useCrosswordGridState = (
 
   }, [getSelectedCoordinates, updateCrosswordGridCell]);
 
+  // append an empty row
+  const addRow = useCallback(() => {
+    console.log('addRow');
+    setGridContentsState((initialState) => {
+      console.log('initialState:', initialState.length);
+      const updatedState = deepCloneGrid(initialState);
+      const width = initialState[0].length;
+      const row = new Array(width)
+        .fill(null)
+        .map((_val) => emptyCellContents(cellLength, defaultCellState)());
+      updatedState.push(row);
+      console.log(row);
+      console.log('updatedState:', updatedState.length);
+      return updatedState;
+    });
+  }, [setGridContentsState]);
+
+  // append an empty column
+  const addColumn = useCallback(() => {
+    console.log('addColumn');
+    setGridContentsState((initialState) => {
+      const updatedState = deepCloneGrid(initialState);
+      return updatedState.map((row) => ([
+        ...row,
+        emptyCellContents(cellLength, defaultCellState)(),
+      ]));
+    });
+  }, [setGridContentsState]);
+
+  // list of words
+  const [wordList, setWordList] = useState([]);
+  useEffect(() => {
+    // whenever gridContentsState is updated, update list of words
+    
+  }, [gridContentsState, setWordList]);
 
 
   return {
@@ -136,5 +166,7 @@ export const useCrosswordGridState = (
     getSelectedCoordinates,
     setSelected,
     setTile,
+    addRow,
+    addColumn,
   };
 }

@@ -43,7 +43,30 @@ export const GridView = ({
   )
 }
 
-export const buildCellContents = (cellContents: CellContents<unknown> | null) => {
+
+// Currently Unused
+// interface ICellLabelProps {
+//   cellLength: number,
+//   numericLabel?: number,
+// }
+
+// const CellLabel = ({
+//   cellLength,
+//   numericLabel,
+// }: ICellLabelProps) => {
+//   return (
+//     <div
+//       className={'CellLabelContainer'}
+//       style={{
+//         height: `${cellLength}px`,
+//         width: `${cellLength}px`,
+//       }}>
+//       <span>{numericLabel}</span>
+//     </div>
+//   );
+// }
+
+const buildCellContents = (cellContents: CellContents<unknown> | null) => {
   if(!cellContents) {
     return null;
   }
